@@ -60,6 +60,17 @@ animations {
   flip_vertical: 0
 }
 animations {
+  id: "hit"
+  images {
+    image: "/assets/sprite/player/character_femaleAdventurer_hit.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
   id: "run"
   images {
     image: "/assets/sprite/player/character_femaleAdventurer_run0.png"
@@ -75,17 +86,6 @@ animations {
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 15
-  flip_horizontal: 0
-  flip_vertical: 0
-}
-animations {
-  id: "hit"
-  images {
-    image: "/assets/sprite/player/character_femaleAdventurer_hit.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-  }
-  playback: PLAYBACK_LOOP_FORWARD
-  fps: 60
   flip_horizontal: 0
   flip_vertical: 0
 }
