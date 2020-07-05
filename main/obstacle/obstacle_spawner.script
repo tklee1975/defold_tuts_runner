@@ -25,7 +25,7 @@ end
 function init(self)
 	-- Add initialization code here
 	math.randomseed(0)
-	self.timer = 0
+	self.timer = 5
 end
 
 
