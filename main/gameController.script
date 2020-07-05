@@ -1,0 +1,28 @@
+
+
+is_running = true
+
+go.property("game_speed", 230)
+
+
+
+local function handle_game_over(self)
+	is_running = false
+end
+
+
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	if message_id == hash("game_over") then
+		handle_game_over(self)
+	end
+end
+
+function init(self)
+	is_running = true
+
+	go.set("scene/scene#script", "speed", self.game_speed)
+	go.set("obstacle_spawner#script", "speed", self.game_speed)
+	
+end 

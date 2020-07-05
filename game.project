@@ -1,5 +1,5 @@
 [bootstrap]
-main_collection = /main/scene/scene.collectionc
+main_collection = /main/main.collectionc
 
 [script]
 shared_state = 1
@@ -13,4 +13,7 @@ input_method = HiddenInputField
 
 [project]
 title = Runner
+
+[physics]
+debug = 0
 

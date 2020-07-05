@@ -1,0 +1,126 @@
+-- Different Player State 
+local STATE_RUN = 0
+local STATE_JUMP = 1
+local STATE_FALL = 2
+local STATE_HIT = 3
+
+-- Jump and Fall Setting 
+local jump_velocity = 380;		-- The velocity when jump
+local gravity = 700;				-- The gravity (the value to decrease velocity)
+
+--- Utility 
+
+local function is_grounded(self)
+	return go.get_position().y <= self.ground_pos
+end
+
+local function reset_ground_pos(self)
+	local pos = go.get_position()
+
+	pos.y = self.ground_pos
+	go.set_position(pos)
+end
+
+
+--- State Logic 
+local function enter_state_run(self) 
+	self.state = STATE_RUN
+
+	sprite.play_flipbook(".", hash("run") )
+end
+
+local function enter_state_jump(self) 
+	self.state = STATE_JUMP
+	sprite.play_flipbook(".", hash("jump") )
+
+	self.velocity = jump_velocity;
+end
+
+local function enter_state_fall(self) 
+	self.state = STATE_FALL
+	sprite.play_flipbook(".", hash("fall") )
+end
+
+local function enter_state_hit(self) 
+	self.state = STATE_HIT
+	sprite.play_flipbook(".", hash("hit") )
+
+	msg.post("gameController#script", "game_over")	-- Tell GameController to handle game over
+end
+
+
+--- Update Logic for Different State ---
+
+local function update_state_jump_fall(self, dt)
+
+
+	-- Update player position with velocity affect
+	local pos = go.get_position();
+
+	
+	pos.y = pos.y + dt * self.velocity;
+
+	go.set_position(pos);
+
+	-- Update the velocity with Gravity affect 
+	self.velocity = self.velocity - gravity * dt
+
+	if self.state == STATE_JUMP then
+		if self.velocity < 0 then
+			enter_state_fall(self)
+		end
+	elseif self.state == STATE_FALL then
+		if is_grounded(self) then
+			reset_ground_pos(self)
+			enter_state_run(self)
+		end
+	end
+end
+
+
+--------------
+
+
+function init(self)
+	enter_state_run(self)
+	-- enter_state_hit(self)
+
+	-- remember the ground position in Y axis
+	self.ground_pos = go.get_position().y     
+	
+	-- Obtain the control 
+	msg.post(".", "acquire_input_focus")
+end
+
+
+function on_input(self, action_id, action)
+	if action_id == hash("touch") then 
+		if action.pressed then
+			if(self.state == STATE_RUN) then
+				enter_state_jump(self)
+			end
+		end
+	end
+end
+
+
+function update(self, dt)
+	-- Add update code here
+	-- Remove this function if not needed
+	if(self.state == STATE_JUMP or self.state == STATE_FALL) then
+		update_state_jump_fall(self, dt)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+	print("DEBUG: on_message receive: id=" .. message_id)
+
+	if message_id == hash("collision_response") then
+		--if is_running then
+		print("DEBUG: player receive collision")
+		enter_state_hit(self)
+		--end
+	end
+end
