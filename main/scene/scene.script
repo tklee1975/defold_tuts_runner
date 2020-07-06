@@ -17,7 +17,7 @@ local function move_layer(self, dt, layer_name, speed_ratio, tile_width)
 		pos.x = pos.x + tile_width
 	end
 
-	-- 5
+	-- 6
 	go.set_position(pos, layer_name)
 end
 
@@ -26,7 +26,7 @@ function update(self, dt)
 		return
 	end
 	
-	-- 7	
+	-- Move layer in different speed 
 	move_layer(self, dt, "background", 0.1, 512)
 	move_layer(self, dt, "ground", 1, 128)
 	move_layer(self, dt, "tree", 0.4, 600)

@@ -59,7 +59,7 @@ collection_instances {
       id: "script"
       properties {
         id: "speed"
-        value: "260.0"
+        value: "230.0"
         type: PROPERTY_TYPE_NUMBER
       }
     }
