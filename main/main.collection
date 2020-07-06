@@ -59,7 +59,7 @@ collection_instances {
       id: "script"
       properties {
         id: "speed"
-        value: "230.0"
+        value: "200.0"
         type: PROPERTY_TYPE_NUMBER
       }
     }
@@ -86,11 +86,6 @@ embedded_instances {
   "    y: 0.0\n"
   "    z: 0.0\n"
   "    w: 1.0\n"
-  "  }\n"
-  "  properties {\n"
-  "    id: \"game_speed\"\n"
-  "    value: \"280.0\"\n"
-  "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
   ""

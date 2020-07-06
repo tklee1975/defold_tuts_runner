@@ -22,10 +22,7 @@ local function move_layer(self, dt, layer_name, speed_ratio, tile_width)
 end
 
 function update(self, dt)
-	if is_running == false then
-		return
-	end
-	
+		
 	-- Move layer in different speed 
 	move_layer(self, dt, "background", 0.1, 512)
 	move_layer(self, dt, "ground", 1, 128)
