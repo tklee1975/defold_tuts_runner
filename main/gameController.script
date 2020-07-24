@@ -1,22 +1,94 @@
 
 go.property("game_speed", 230)
 
+local score_interval = 1
+
+
 -- 1
 is_running = true
+
+
+
+local function set_game_over_visible(self, is_visible) 
+	msg.post("#main_gui", "set_game_over_visible", { visible = is_visible} )
+end
+
 
 -- 2
 local function handle_game_over(self)
 	is_running = false
+	set_game_over_visible(self, true)
 end
+
+
+local function update_score(self) 
+	msg.post("#main_gui", "update_score", { score = self.score} )
+end
+
+local function update_best_score(self) 
+	msg.post("#main_gui", "update_best_score", { score = self.best_score} )
+end
+
+local function increase_score(self)
+	self.score = self.score + 1
+	update_score(self)
+	if(self.score > self.best_score) then
+		self.best_score = self.score
+		update_best_score(self)
+	end
+end
+
+local function play_again(self)
+	print("DEBUG: play_again")
+
+	msg.post("obstacle_spawner#script", "reset")
+	msg.post("player#script", "reset_player")
+
+	self.score = 0
+	update_score(self)
+
+
+	set_game_over_visible(self, false)
+
+	is_running = true
+end
+
+
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("game_over") then
 		handle_game_over(self)
+	elseif message_id == hash("play_again") then		
+		print("main: message: ", message_id, " msg=", message)
+		play_again(self)		
 	end
 end
 
 function init(self)
+	self.score = 0
+	self.best_score = 0
+	
+	self.score_timer = 0
+
+	update_score(self)
+	update_best_score(self)
+	
+
+	set_game_over_visible(self, false);
+
+	-- Set the game speed 
 	go.set("scene/scene#script", "speed", self.game_speed)
 	go.set("obstacle_spawner#script", "speed", self.game_speed)
 end 
 
+function update(self, dt)
+	if(is_running == false) then 
+		return
+	end
+
+	self.score_timer = self.score_timer - dt
+	if(self.score_timer < 0) then 
+		increase_score(self)
+		self.score_timer = score_interval
+	end 
+end

@@ -31,6 +31,8 @@ local function enter_state_hit(self)
 	self.state = STATE_HIT
 	sprite.play_flipbook(".", hash("hit") )
 
+	msg.post("#collisionobject", "disable")
+	
 	-- 2
 	msg.post("gameController#script", "game_over")    -- Tell GameController to handle game over
 	
@@ -46,6 +48,19 @@ local function reset_ground_pos(self)
 	pos.y = self.ground_pos
 	go.set_position(pos)
 end
+
+
+local function reset_player(self) 
+	print("DEBUG: reset_player")
+
+	reset_ground_pos(self)
+	enter_state_run(self)
+
+	timer.delay(1, false, function()
+		msg.post("#collisionobject", "enable")
+	end);
+end 
+
 
 function init(self)
 	self.ground_pos = go.get_position().y 
@@ -101,6 +116,8 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") then
 		-- 3
 		enter_state_hit(self)		
+	elseif message_id == hash("reset_player") then 	
+		reset_player(self)
 	end
 end
 

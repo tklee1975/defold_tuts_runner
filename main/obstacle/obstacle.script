@@ -1,6 +1,10 @@
 -- 1
 go.property("speed", 230)
 
+function init(self)
+	msg.post("obstacle_spawner#script", "obstacle_created")
+end
+
 function update(self, dt)
 	if is_running == false then
 		return
@@ -13,6 +17,7 @@ function update(self, dt)
 	-- 3
 	if p.x < -100 then
 		go.delete()
+		msg.post("obstacle_spawner#script", "obstacle_deleted")
 		return;
 	end
 
