@@ -2,12 +2,10 @@
 go.property("speed", 230)
 
 function init(self)
-	msg.post("obstacle_spawner#script", "obstacle_created")
 end
 
 function remove_obstacle()
 	go.delete()
-	msg.post("obstacle_spawner#script", "obstacle_deleted") 
 end 
 
 function update(self, dt)

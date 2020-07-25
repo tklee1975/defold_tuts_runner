@@ -22,16 +22,8 @@ local function spawn_obstacle(self)
 	local new_obstacle = factory.create(factory_name, pos, nil, prop, vmath.vector3(scale))
 end
 
-local function clear_all_obstacles(self)
-	for m, _ in pairs(self.obstacle_list) do
-		go.delete(m)
-	end
-	self.obstacle_list = {}
-end
-
 function init(self) 
 	self.timer = 0
-	self.obstacle_list = {}
 end
 
 
@@ -50,15 +42,3 @@ function update(self, dt)
 	self.timer = get_random_interval()
 end
 
-function on_message(self, message_id, message, sender)
-	if message_id == hash("obstacle_created") then
-		self.obstacle_list[sender.path] = true
-		print("DEBUG: obstacle_list=", self.obstacle_list)
-	elseif message_id == hash("obstacle_deleted") then
-		self.obstacle_list[sender.path] = nil
-		print("DEBUG: obstacle_list=", self.obstacle_list)
-	elseif message_id == hash("reset") then
-		self.timer = 0
-		clear_all_obstacles(self)
-	end
-end
