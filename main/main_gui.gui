@@ -11,6 +11,10 @@ textures {
   name: "gui"
   texture: "/assets/atlas/gui.atlas"
 }
+textures {
+  name: "particle_blob"
+  texture: "/builtins/graphics/particle_blob.tilesource"
+}
 background_color {
   x: 0.0
   y: 0.0
@@ -167,9 +171,9 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.7019608
-    y: 0.101960786
-    z: 0.101960786
+    x: 0.0
+    y: 0.0
+    z: 1.0
     w: 1.0
   }
   type: TYPE_TEXT
