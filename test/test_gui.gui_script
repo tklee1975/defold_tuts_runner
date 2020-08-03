@@ -1,0 +1,33 @@
+function init(self)
+	self.shake_button = gui.get_node("shake_button")
+	msg.post(".", "acquire_input_focus")
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("touch") and action.pressed then 		
+		if gui.pick_node(self.shake_button, action.x, action.y) then
+			print("Shake is clicked!!")
+			msg.post("camera#screen_shake", "shake", { shake = 500 })		
+		end
+	end
+end
+
+function on_reload(self)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end

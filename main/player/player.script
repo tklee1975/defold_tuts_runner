@@ -8,14 +8,35 @@ local STATE_JUMP = 1
 local STATE_FALL = 2
 local STATE_HURT = 3
 
+
+function play_jump_sound() 
+	sound.play("#jump")
+end 
+
+function play_imapct_sound() 
+	sound.play("#impact")
+end 
+
+function play_footstep_sound() 
+	sound.play("#footstep", {delay = 0, gain = 0.7, pan = 0, speed = 2.5})
+end 
+
+function stop_footstep_sound() 
+	sound.stop("#footstep")
+end 
+
 --- State Logic
 local function enter_state_run(self)
 	self.state = STATE_RUN
 
+	play_footstep_sound()
 	sprite.play_flipbook(".", hash("run") )
 end
 
 local function enter_state_jump(self)
+	stop_footstep_sound()
+	play_jump_sound()
+	
 	self.state = STATE_JUMP
 	sprite.play_flipbook(".", hash("jump") )
 
@@ -35,7 +56,9 @@ local function enter_state_hit(self)
 	
 	-- 2
 	msg.post("gameController#script", "game_over")    -- Tell GameController to handle game over
-	
+
+	play_imapct_sound()
+	stop_footstep_sound()
 end
 
 local function is_grounded(self)
@@ -103,6 +126,7 @@ local function update_state_jump_fall(self, dt)
 		end
 	elseif self.state == STATE_FALL then
 		if(is_grounded(self)) then 
+			particlefx.play("#land_fx")		-- ** NEW **
 			reset_ground_pos(self)
 			enter_state_run(self)
 		end

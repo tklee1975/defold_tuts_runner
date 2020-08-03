@@ -8,6 +8,17 @@ local score_interval = 1
 is_running = true
 
 
+function start_wind_particle() 
+	particlefx.play("vfx#wind_fx")
+end
+
+function stop_wind_particle() 
+	particlefx.stop("vfx#wind_fx")
+end
+
+function shake_screen() 
+	msg.post("camera#screen_shake", "shake", { shake = 100 })		
+end
 
 local function set_game_over_visible(self, is_visible) 
 	msg.post("#main_gui", "set_game_over_visible", { visible = is_visible} )
@@ -18,6 +29,9 @@ end
 local function handle_game_over(self)
 	is_running = false
 	set_game_over_visible(self, true)
+
+	shake_screen()
+	stop_wind_particle()
 end
 
 
@@ -27,6 +41,10 @@ end
 
 local function update_best_score(self) 
 	msg.post("#main_gui", "update_best_score", { score = self.best_score} )
+
+	if(self.last_best ~= 0 and self.best_score == self.last_best+1) then 
+		sound.play("sound#new_score")
+	end 
 end
 
 local function increase_score(self)
@@ -35,6 +53,7 @@ local function increase_score(self)
 	if(self.score > self.best_score) then
 		self.best_score = self.score
 		update_best_score(self)
+
 	end
 end
 
@@ -44,12 +63,14 @@ local function play_again(self)
 	msg.post("obstacle_spawner#script", "reset")
 	msg.post("player#script", "reset_player")
 
+	self.last_best = self.best_score
 	self.score = 0
 	update_score(self)
 
-
 	set_game_over_visible(self, false)
 
+	start_wind_particle();
+	
 	is_running = true
 end
 
@@ -60,25 +81,38 @@ function on_message(self, message_id, message, sender)
 		handle_game_over(self)
 	elseif message_id == hash("play_again") then		
 		print("main: message: ", message_id, " msg=", message)
+
+		
 		play_again(self)		
 	end
 end
 
+function play_main_bgm() 
+	sound.play("sound#bgm", {delay = 0.5, gain = 0.3, pan = 0, speed = 1})
+end
+
+
 function init(self)
 	self.score = 0
 	self.best_score = 0
-	
+	self.last_best = 0
 	self.score_timer = 0
 
 	update_score(self)
 	update_best_score(self)
 	
 
-	set_game_over_visible(self, false);
+	set_game_over_visible(self, false)
 
 	-- Set the game speed 
 	go.set("scene/scene#script", "speed", self.game_speed)
 	go.set("obstacle_spawner#script", "speed", self.game_speed)
+
+
+	start_wind_particle();
+	
+	-- Play Main BGM 
+	play_main_bgm()
 end 
 
 function update(self, dt)
