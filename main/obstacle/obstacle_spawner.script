@@ -29,7 +29,7 @@ local function clear_all_obstacles(self)
 	self.obstacle_list = {}
 end
 
-function init(self) 
+function init(self)
 	self.timer = 0
 	self.obstacle_list = {}
 end
@@ -39,7 +39,7 @@ function update(self, dt)
 	if is_running == false then
 		return
 	end
-	
+
 	self.timer = self.timer - dt
 
 	if self.timer > 0 then
